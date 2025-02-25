@@ -1,0 +1,95 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: Pull-Request-Creator
+  title: Pull-Request-Creator
+  description: Create a new PR
+spec:
+  owner: owner-id
+  type: service
+  parameters:
+    - title: Enter your details
+      properties:
+        gitUsername:
+          title: Repository Owner Username
+          description: Enter the repository owner username
+          type: string
+        repoPicker:
+          title: GitHub Repositories
+          type: string
+          description: Pick one of GitHub Repos
+          ui:field: SelectFieldFromApi
+          ui:options:
+            path: proxy/github-api/users/{{parameters.gitUsername}}/repos
+            valueSelector: full_name
+            setContextData: 
+              repoName: name
+              branch: default_branch
+              type: visibility                 
+        repositoryName:
+          title: Repository Name
+          readonly: true
+          description: Check your Repository Name
+          type: string            
+          ui:field: ContextViewer
+          ui:options:
+            getContextData: {{formContext.repoName}}          
+        typeName:
+          title: Visibility
+          readonly: true
+          description: Repository Visibility
+          type: string     
+          ui:field: ContextViewer
+          ui:options:
+            getContextData: {{formContext.type}}
+        originBranchName:
+          title: Default Branch
+          description: Default Branch where you want the changes pulled into. 
+          type: string
+          ui:field: ContextViewer
+          ui:options:
+            getContextData: {{formContext.branch}}
+        titlePR:
+          title: Title of PR
+          description: Enter the Title of your Pull Request
+          type: string
+        newBranch:
+          title: Branch Name for PR
+          description: Enter the name of the branch where your changes are implemented
+          type: string
+        customValidate:
+          type: string
+          ui:field: ValidateAndFetch
+          ui:options:
+            button: 
+              title: Create a Pull Request
+            path: proxy/github-api/repos/{{parameters.gitUsername}}/{{parameters.repositoryName}}/pulls
+            request: 
+              method: POST
+              headers: 
+                Content-Type: application/json
+              body: 
+                title: "{{parameters.titlePR}}"
+                head: "{{parameters.newBranch}}"
+                base: "{{parameters.branchName}}"
+              setContextData:
+                prUrl: html_url
+        latestPR_URL:
+          title: Pull Request URL
+          readonly: true
+          description: Check your PR
+          type: string            
+          ui:field: ContextViewer
+          ui:options:
+            getContextData: {{formContext.prUrl}} 
+        token:
+          title: Harness Token
+          type: string
+          ui:widget: password
+          ui:field: HarnessAuthToken
+  steps:
+  - action: debug:log
+    id: debug-pull-request
+    name: Pull Request Created
+    input:
+      message: Hello, Your Pull Request has been created. 
