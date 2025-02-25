@@ -78,8 +78,10 @@ spec:
           title: Pull Request URL
           readonly: true
           description: Check your PR
-          type: string            
+          type: string
+          format: uri
           ui:field: ContextViewer
+          ui:widget: url
           ui:options:
             getContextData: {{formContext.prUrl}} 
         token:
