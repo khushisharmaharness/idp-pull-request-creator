@@ -74,6 +74,13 @@ spec:
                 base: "{{parameters.branchName}}"
               setContextData:
                 prUrl: html_url
+        dump:
+          title: Dump
+          description: DEBUG Context
+          type: string            
+          ui:field: ContextViewer
+          ui:options:
+            getContextData: {{formContext}} 
         latestPR_URL:
           title: Pull Request URL
           readonly: true
