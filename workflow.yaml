@@ -74,8 +74,8 @@ spec:
                 base: "{{parameters.originBranchName}}"
             setContextData:
               prUrl: html_url
-        dump:
-          title: Dump
+        formContext:
+          title: Live Form Context
           description: DEBUG Context
           type: string            
           ui:field: ContextViewer
@@ -86,7 +86,6 @@ spec:
           readonly: true
           description: Check your PR
           type: string
-          format: uri
           ui:field: ContextViewer
           ui:widget: url
           ui:options:
