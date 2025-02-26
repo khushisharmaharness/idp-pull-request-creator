@@ -72,8 +72,8 @@ spec:
                 title: "{{parameters.titlePR}}"
                 head: "{{parameters.newBranch}}"
                 base: "{{parameters.originBranchName}}"
-              setContextData:
-                prUrl: html_url
+            setContextData:
+              prUrl: html_url
         dump:
           title: Dump
           description: DEBUG Context
