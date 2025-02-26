@@ -71,7 +71,7 @@ spec:
               body: 
                 title: "{{parameters.titlePR}}"
                 head: "{{parameters.newBranch}}"
-                base: "{{parameters.branchName}}"
+                base: "{{parameters.originBranchName}}"
               setContextData:
                 prUrl: html_url
         dump:
