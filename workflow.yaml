@@ -1,7 +1,7 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: dynamic-picker-sample-demo
+  name: Dynamic-Picker-Sample-Pull-Request-Creator
   title: Pull-Request-Creator
   description: Create a new PR
 spec:
@@ -33,13 +33,21 @@ spec:
           type: string            
           ui:field: ContextViewer
           ui:options:
-            getContextData: {{formContext.repoName}} 
+            getContextData: {{formContext.repoName}}          
+        typeName:
+          title: Visibility
+          readonly: true
+          description: Repository Visibility
+          type: string     
+          ui:field: ContextViewer
+          ui:options:
+            getContextData: {{formContext.type}}
         originBranchName:
-          title: Origin Branch Name
-          description: Check your origin Branch Name
+          title: Default Branch
+          description: Default Branch where you want the changes pulled into. 
           type: string
           ui:field: ContextViewer
-          ui:options: 
+          ui:options:
             getContextData: {{formContext.branch}}
         titlePR:
           title: Title of PR
@@ -56,8 +64,6 @@ spec:
             button: 
               title: Create a Pull Request
             path: proxy/github-api/repos/{{parameters.gitUsername}}/{{parameters.repositoryName}}/pulls
-            contextData:
-              prURL: html_url
             request: 
               method: POST
               headers: 
@@ -66,3 +72,32 @@ spec:
                 title: "{{parameters.titlePR}}"
                 head: "{{parameters.newBranch}}"
                 base: "{{parameters.originBranchName}}"
+            setContextData:
+              prUrl: html_url 
+        latestPR_URL:
+          title: Pull Request URL
+          readonly: true
+          description: Check your PR
+          type: string
+          ui:field: ContextViewer
+          ui:widget: url
+          ui:options:
+            getContextData: {{formContext.prUrl}} 
+        formContext:
+          title: Live Form Context
+          description: DEBUG Context
+          type: string            
+          ui:field: ContextViewer
+          ui:options:
+            getContextData: {{formContext}}
+        token:
+          title: Harness Token
+          type: string
+          ui:widget: password
+          ui:field: HarnessAuthToken
+  steps:
+  - action: debug:log
+    id: debug-pull-request
+    name: Pull Request Created
+    input:
+      message: Hello, Your Pull Request has been created. 
